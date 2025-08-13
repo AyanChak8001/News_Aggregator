@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>News Aggregator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        .article { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
+        .title { font-weight: bold; font-size: 1.2em; }
+        .description { margin-top: 5px; }
+        .link { margin-top: 5px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+<h1>Top News</h1>
+<div id="news-container">Loading news...</div>
+
+<script>
+    const newsContainer = document.getElementById('news-container');
+
+    // Replace this URL with your own news API if you want
+    const newsApiUrl = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=18e7b17743e84e3295c48774d6de9446';
+
+    fetch(newsApiUrl)
+        .then(response => response.json())
+        .then(data => {
+            newsContainer.innerHTML = '';
+            if (data.articles && data.articles.length > 0) {
+                data.articles.forEach(article => {
+                    const articleDiv = document.createElement('div');
+                    articleDiv.className = 'article';
+
+                    articleDiv.innerHTML = `
+                        <div class="title">${article.title}</div>
+                        <div class="description">${article.description || ''}</div>
+                        <div class="link"><a href="${article.url}" target="_blank">Read more</a></div>
+                    `;
+                    newsContainer.appendChild(articleDiv);
+                });
+            } else {
+                newsContainer.innerHTML = 'No news articles found.';
+            }
+        })
+        .catch(err => {
+            newsContainer.innerHTML = 'Failed to load news.';
+            console.error(err);
+        });
+</script>
+</body>
+</html>
